@@ -1,6 +1,8 @@
 defmodule EmployeeRewardsWeb.Router do
   use EmployeeRewardsWeb, :router
 
+  import EmployeeRewardsWeb.CredentialsAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule EmployeeRewardsWeb.Router do
     plug :put_root_layout, {EmployeeRewardsWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_credentials
   end
 
   pipeline :api do
@@ -52,5 +55,38 @@ defmodule EmployeeRewardsWeb.Router do
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", EmployeeRewardsWeb do
+    pipe_through [:browser, :redirect_if_credentials_is_authenticated]
+
+    get "/credentials/register", CredentialsRegistrationController, :new
+    post "/credentials/register", CredentialsRegistrationController, :create
+    get "/credentials/log_in", CredentialsSessionController, :new
+    post "/credentials/log_in", CredentialsSessionController, :create
+    get "/credentials/reset_password", CredentialsResetPasswordController, :new
+    post "/credentials/reset_password", CredentialsResetPasswordController, :create
+    get "/credentials/reset_password/:token", CredentialsResetPasswordController, :edit
+    put "/credentials/reset_password/:token", CredentialsResetPasswordController, :update
+  end
+
+  scope "/", EmployeeRewardsWeb do
+    pipe_through [:browser, :require_authenticated_credentials]
+
+    get "/credentials/settings", CredentialsSettingsController, :edit
+    put "/credentials/settings", CredentialsSettingsController, :update
+    get "/credentials/settings/confirm_email/:token", CredentialsSettingsController, :confirm_email
+  end
+
+  scope "/", EmployeeRewardsWeb do
+    pipe_through [:browser]
+
+    delete "/credentials/log_out", CredentialsSessionController, :delete
+    get "/credentials/confirm", CredentialsConfirmationController, :new
+    post "/credentials/confirm", CredentialsConfirmationController, :create
+    get "/credentials/confirm/:token", CredentialsConfirmationController, :edit
+    post "/credentials/confirm/:token", CredentialsConfirmationController, :update
   end
 end

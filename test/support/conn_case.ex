@@ -35,4 +35,30 @@ defmodule EmployeeRewardsWeb.ConnCase do
     EmployeeRewards.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
+  @doc """
+  Setup helper that registers and logs in credentials.
+
+      setup :register_and_log_in_credentials
+
+  It stores an updated connection and a registered credentials in the
+  test context.
+  """
+  def register_and_log_in_credentials(%{conn: conn}) do
+    credentials = EmployeeRewards.IdentityFixtures.credentials_fixture()
+    %{conn: log_in_credentials(conn, credentials), credentials: credentials}
+  end
+
+  @doc """
+  Logs the given `credentials` into the `conn`.
+
+  It returns an updated `conn`.
+  """
+  def log_in_credentials(conn, credentials) do
+    token = EmployeeRewards.Identity.generate_credentials_session_token(credentials)
+
+    conn
+    |> Phoenix.ConnTest.init_test_session(%{})
+    |> Plug.Conn.put_session(:credentials_token, token)
+  end
 end
