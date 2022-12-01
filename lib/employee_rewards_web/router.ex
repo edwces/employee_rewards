@@ -20,7 +20,7 @@ defmodule EmployeeRewardsWeb.Router do
   scope "/", EmployeeRewardsWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", MemberController, :index
   end
 
   # Other scopes may use custom stacks.
@@ -77,7 +77,10 @@ defmodule EmployeeRewardsWeb.Router do
 
     get "/credentials/settings", CredentialsSettingsController, :edit
     put "/credentials/settings", CredentialsSettingsController, :update
-    get "/credentials/settings/confirm_email/:token", CredentialsSettingsController, :confirm_email
+
+    get "/credentials/settings/confirm_email/:token",
+        CredentialsSettingsController,
+        :confirm_email
   end
 
   scope "/", EmployeeRewardsWeb do
