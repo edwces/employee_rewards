@@ -7,6 +7,7 @@ defmodule EmployeeRewards.Members do
   alias EmployeeRewards.Repo
 
   alias EmployeeRewards.Members.Member
+  alias EmployeeRewards.Identity
 
   @doc """
   Returns the list of members.
@@ -49,10 +50,13 @@ defmodule EmployeeRewards.Members do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_member(attrs \\ %{}) do
-    %Member{}
-    |> Member.changeset(attrs)
-    |> Repo.insert()
+  # REVIEW: maybe try not using raw foreign keys for changeset
+  def register_member(attrs \\ %{}) do
+    with {:ok, credentials} <- Identity.register_credentials(attrs) do
+      %Member{}
+      |> Member.changeset(%{credentials_id: credentials.id})
+      |> Repo.insert()
+    end
   end
 
   @doc """

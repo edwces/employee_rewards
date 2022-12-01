@@ -12,7 +12,8 @@ defmodule EmployeeRewards.Members.Member do
   @doc false
   def changeset(member, attrs) do
     member
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:points, :credentials_id])
+    |> validate_required([:credentials_id])
+    |> unique_constraint([:credentials_id])
   end
 end
