@@ -3,6 +3,7 @@ defmodule EmployeeRewardsWeb.CredentialsRegistrationController do
 
   alias EmployeeRewards.Identity
   alias EmployeeRewards.Identity.Credentials
+  alias EmployeeRewards.Members
   alias EmployeeRewardsWeb.CredentialsAuth
 
   def new(conn, _params) do
@@ -10,9 +11,12 @@ defmodule EmployeeRewardsWeb.CredentialsRegistrationController do
     render(conn, "new.html", changeset: changeset)
   end
 
+  # REVIEW: Should Members and Identity Contexts functions be mixed together.
+  # Should Identity.deliver_credentials_confirmation_instructions be moved
+  # to register member function OR maybe remove creating credentials in Members module
   def create(conn, %{"credentials" => credentials_params}) do
-    case Identity.register_credentials(credentials_params) do
-      {:ok, credentials} ->
+    case Members.register_member(credentials_params) do
+      {:ok, _member, credentials} ->
         {:ok, _} =
           Identity.deliver_credentials_confirmation_instructions(
             credentials,

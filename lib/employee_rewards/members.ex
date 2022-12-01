@@ -51,11 +51,16 @@ defmodule EmployeeRewards.Members do
 
   """
   # REVIEW: maybe try not using raw foreign keys for changeset
+  # HACK: we return credentials as they are needed in other controller
+  # and we are not preloading it in member
   def register_member(attrs \\ %{}) do
     with {:ok, credentials} <- Identity.register_credentials(attrs) do
-      %Member{}
-      |> Member.changeset(%{credentials_id: credentials.id})
-      |> Repo.insert()
+      member =
+        %Member{}
+        |> Member.changeset(%{credentials_id: credentials.id})
+        |> Repo.insert()
+
+      {:ok, member, credentials}
     end
   end
 
