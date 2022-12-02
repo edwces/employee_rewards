@@ -26,6 +26,12 @@ config :employee_rewards, EmployeeRewardsWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :employee_rewards, EmployeeRewards.Mailer, adapter: Swoosh.Adapters.Local
 
+# Configure Quantum scheduler
+config :employee_rewards, EmployeeRewards.Scheduler,
+  jobs: [
+    {"@monthly", &EmployeeRewards.Members.reset_members_points/0}
+  ]
+
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
 

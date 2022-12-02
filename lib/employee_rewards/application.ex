@@ -10,6 +10,7 @@ defmodule EmployeeRewards.Application do
     children = [
       # Start the Ecto repository
       EmployeeRewards.Repo,
+      EmployeeRewards.Scheduler,
       # Start the Telemetry supervisor
       EmployeeRewardsWeb.Telemetry,
       # Start the PubSub system

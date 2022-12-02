@@ -9,6 +9,10 @@ defmodule EmployeeRewards.Members do
   alias EmployeeRewards.Members.Member
   alias EmployeeRewards.Identity
 
+  def reset_members_points do
+    Repo.update_all(Member, set: [points: 50])
+  end
+
   @doc """
   Returns the list of members.
 
