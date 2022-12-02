@@ -1,14 +1,21 @@
-<table>
+<table class="table">
   <thead>
     <tr>
-      <th>Email</th>
-      <th>Points</th>
+      <th scope="col">Id</th>
+      <th scope="col">Points</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
+    <%= for member <- @members do %>
     <tr>
-      <td>some@gmail.com</td>
-      <td>50</td>
+      <td><%= member.id %></td>
+      <td><%= member.points %></td>
+      <td><%= link to: Routes.member_path(@conn, :grant, member), class: "btn btn-light float-end" do %>
+        <i class="bi bi-award"></i>
+        <% end %>
+      </td>
     </tr>
+    <% end %>
   </tbody>
 </table>
