@@ -9,7 +9,12 @@ defmodule EmployeeRewards.Members do
   alias EmployeeRewards.Members.Member
   alias EmployeeRewards.Identity
 
-  def member_points_transaction(%Member{} = from, %Member{} = to, %{points: points}) do
+  # REVIEW: Maybe it's better to use just map as a param instead whole credentials struct
+  def get_member_by_credentials(%Identity.Credentials{} = credentials) do
+    Repo.get_by!(Member, credentials_id: credentials.id)
+  end
+
+  def transfer_member_points(%Member{} = from, %Member{} = to, %{points: points}) do
     Ecto.Multi.new()
     |> Ecto.Multi.update(
       :member_from,

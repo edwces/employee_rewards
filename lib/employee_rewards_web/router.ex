@@ -22,6 +22,7 @@ defmodule EmployeeRewardsWeb.Router do
 
     get "/", MemberController, :index
     get "/members/:id/grant", MemberController, :grant
+    put "/members/:id/grant", MemberController, :change
   end
 
   # Other scopes may use custom stacks.
