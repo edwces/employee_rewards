@@ -9,6 +9,23 @@ defmodule EmployeeRewards.Members do
   alias EmployeeRewards.Members.Member
   alias EmployeeRewards.Identity
 
+  def member_points_transaction(%Member{} = from, %Member{} = to, %{points: points}) do
+    Ecto.Multi.new()
+    |> Ecto.Multi.update(
+      :member_from,
+      change_member_points(from, %{points: from.points - points})
+    )
+    |> Ecto.Multi.update(
+      :member_to,
+      change_member_points(to, %{points: to.points + points})
+    )
+    |> Repo.transaction()
+  end
+
+  def change_member_points(%Member{} = member, attrs \\ %{}) do
+    Member.points_changeset(member, attrs)
+  end
+
   def reset_members_points do
     Repo.update_all(Member, set: [points: 50])
   end
@@ -54,18 +71,22 @@ defmodule EmployeeRewards.Members do
       {:error, %Ecto.Changeset{}}
 
   """
+  def create_member(attrs \\ %{}) do
+    %Member{}
+    |> Member.changeset(attrs)
+    |> Repo.insert()
+  end
+
   # REVIEW: maybe try not using raw foreign keys for changeset
   # HACK: we return credentials as they are needed in other controller
   # and we are not preloading it in member
   def register_member(attrs \\ %{}) do
-    with {:ok, credentials} <- Identity.register_credentials(attrs) do
-      member =
-        %Member{}
-        |> Member.changeset(%{credentials_id: credentials.id})
-        |> Repo.insert()
-
-      {:ok, member, credentials}
-    end
+    Ecto.Multi.new()
+    |> Ecto.Multi.run(:credentials, fn _repo, _attrs -> Identity.register_credentials(attrs) end)
+    |> Ecto.Multi.run(:member, fn _repo, %{credentials: credentials} ->
+      create_member(%{credentials_id: credentials.id})
+    end)
+    |> Repo.transaction()
   end
 
   @doc """
