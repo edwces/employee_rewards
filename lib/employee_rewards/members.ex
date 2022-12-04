@@ -76,22 +76,10 @@ defmodule EmployeeRewards.Members do
       {:error, %Ecto.Changeset{}}
   
   """
-  def create_member(attrs \\ %{}) do
+  def register_member(attrs \\ %{}) do
     %Member{}
     |> Member.register_changeset(attrs)
     |> Repo.insert()
-  end
-
-  # REVIEW: maybe try not using raw foreign keys for changeset
-  # HACK: we return credentials as they are needed in other controller
-  # and we are not preloading it in member
-  def register_member(attrs \\ %{}) do
-    Ecto.Multi.new()
-    |> Ecto.Multi.run(:credentials, fn _repo, _attrs -> Identity.register_credentials(attrs) end)
-    |> Ecto.Multi.run(:member, fn _repo, %{credentials: credentials} ->
-      create_member(%{credentials_id: credentials.id})
-    end)
-    |> Repo.transaction()
   end
 
   @doc """

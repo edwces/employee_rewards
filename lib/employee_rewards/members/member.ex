@@ -12,10 +12,12 @@ defmodule EmployeeRewards.Members.Member do
   @doc false
   def register_changeset(member, attrs) do
     member
-    |> cast(attrs, [:points, :credentials_id])
-    |> validate_required([:credentials_id])
+    |> cast(attrs, [:points])
+    |> cast_assoc(:credentials,
+      required: true,
+      with: &EmployeeRewards.Identity.Credentials.registration_changeset/2
+    )
     |> validate_number(:points, greater_than_or_equal_to: 0)
-    |> unique_constraint([:credentials_id])
   end
 
   def points_changeset(member, attrs) do

@@ -1,12 +1,13 @@
 <h1>Register</h1>
 
-<.form let={f} for={@changeset} action={Routes.credentials_registration_path(@conn, :create)}>
+<.form let={fp} for={@changeset} action={Routes.credentials_registration_path(@conn, :create)}>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
 
+  <%= inputs_for fp, :credentials, fn f -> %>
   <%= label f, :email %>
   <%= email_input f, :email, required: true %>
   <%= error_tag f, :email %>
@@ -14,6 +15,8 @@
   <%= label f, :password %>
   <%= password_input f, :password, required: true %>
   <%= error_tag f, :password %>
+
+  <% end %>
 
   <div>
     <%= submit "Register" %>
