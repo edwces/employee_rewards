@@ -10,7 +10,7 @@ defmodule EmployeeRewards.Members.Member do
   end
 
   @doc false
-  def changeset(member, attrs) do
+  def register_changeset(member, attrs) do
     member
     |> cast(attrs, [:points, :credentials_id])
     |> validate_required([:credentials_id])
