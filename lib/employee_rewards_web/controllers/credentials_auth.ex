@@ -2,6 +2,7 @@ defmodule EmployeeRewardsWeb.CredentialsAuth do
   import Plug.Conn
   import Phoenix.Controller
 
+  alias EmployeeRewards.Members
   alias EmployeeRewards.Identity
   alias EmployeeRewardsWeb.Router.Helpers, as: Routes
 
@@ -88,10 +89,17 @@ defmodule EmployeeRewardsWeb.CredentialsAuth do
   Authenticates the credentials by looking into the session
   and remember me token.
   """
-  def fetch_current_credentials(conn, _opts) do
+  # REVIEW: Should probably be in it's own standalone module
+  # and abstract and put credentials as association
+  def fetch_current_member_and_credentials(conn, _opts) do
     {credentials_token, conn} = ensure_credentials_token(conn)
-    credentials = credentials_token && Identity.get_credentials_by_session_token(credentials_token)
+
+    credentials =
+      credentials_token && Identity.get_credentials_by_session_token(credentials_token)
+
+    member = credentials && Members.get_member_by_credentials(credentials)
     assign(conn, :current_credentials, credentials)
+    assign(conn, :current_member, member)
   end
 
   defp ensure_credentials_token(conn) do

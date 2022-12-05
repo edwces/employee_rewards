@@ -13,6 +13,9 @@ defmodule EmployeeRewardsWeb.MemberController do
     render(conn, "grant.html", member: member, changeset: changeset)
   end
 
+  # HACK: We should probably not use custom form helpers this way
+  # Either way add remove this page and grant and this functionality into index
+  # Or add custom input helper in View Module
   def change(conn, %{"id" => member_id, "member" => member}) do
     from = Members.get_member_by_credentials(conn.assigns.current_credentials)
     to = Members.get_member!(member_id)

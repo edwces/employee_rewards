@@ -20,23 +20,41 @@ defmodule EmployeeRewardsWeb.CredentialsAuthTest do
     test "stores the credentials token in the session", %{conn: conn, credentials: credentials} do
       conn = CredentialsAuth.log_in_credentials(conn, credentials)
       assert token = get_session(conn, :credentials_token)
-      assert get_session(conn, :live_socket_id) == "credentials_sessions:#{Base.url_encode64(token)}"
+
+      assert get_session(conn, :live_socket_id) ==
+               "credentials_sessions:#{Base.url_encode64(token)}"
+
       assert redirected_to(conn) == "/"
       assert Identity.get_credentials_by_session_token(token)
     end
 
-    test "clears everything previously stored in the session", %{conn: conn, credentials: credentials} do
-      conn = conn |> put_session(:to_be_removed, "value") |> CredentialsAuth.log_in_credentials(credentials)
+    test "clears everything previously stored in the session", %{
+      conn: conn,
+      credentials: credentials
+    } do
+      conn =
+        conn
+        |> put_session(:to_be_removed, "value")
+        |> CredentialsAuth.log_in_credentials(credentials)
+
       refute get_session(conn, :to_be_removed)
     end
 
     test "redirects to the configured path", %{conn: conn, credentials: credentials} do
-      conn = conn |> put_session(:credentials_return_to, "/hello") |> CredentialsAuth.log_in_credentials(credentials)
+      conn =
+        conn
+        |> put_session(:credentials_return_to, "/hello")
+        |> CredentialsAuth.log_in_credentials(credentials)
+
       assert redirected_to(conn) == "/hello"
     end
 
     test "writes a cookie if remember_me is configured", %{conn: conn, credentials: credentials} do
-      conn = conn |> fetch_cookies() |> CredentialsAuth.log_in_credentials(credentials, %{"remember_me" => "true"})
+      conn =
+        conn
+        |> fetch_cookies()
+        |> CredentialsAuth.log_in_credentials(credentials, %{"remember_me" => "true"})
+
       assert get_session(conn, :credentials_token) == conn.cookies[@remember_me_cookie]
 
       assert %{value: signed_token, max_age: max_age} = conn.resp_cookies[@remember_me_cookie]
@@ -82,16 +100,23 @@ defmodule EmployeeRewardsWeb.CredentialsAuthTest do
     end
   end
 
-  describe "fetch_current_credentials/2" do
+  describe "fetch_current_member_and_credentials/2" do
     test "authenticates credentials from session", %{conn: conn, credentials: credentials} do
       credentials_token = Identity.generate_credentials_session_token(credentials)
-      conn = conn |> put_session(:credentials_token, credentials_token) |> CredentialsAuth.fetch_current_credentials([])
+
+      conn =
+        conn
+        |> put_session(:credentials_token, credentials_token)
+        |> CredentialsAuth.fetch_current_member_and_credentials([])
+
       assert conn.assigns.current_credentials.id == credentials.id
     end
 
     test "authenticates credentials from cookies", %{conn: conn, credentials: credentials} do
       logged_in_conn =
-        conn |> fetch_cookies() |> CredentialsAuth.log_in_credentials(credentials, %{"remember_me" => "true"})
+        conn
+        |> fetch_cookies()
+        |> CredentialsAuth.log_in_credentials(credentials, %{"remember_me" => "true"})
 
       credentials_token = logged_in_conn.cookies[@remember_me_cookie]
       %{value: signed_token} = logged_in_conn.resp_cookies[@remember_me_cookie]
@@ -99,7 +124,7 @@ defmodule EmployeeRewardsWeb.CredentialsAuthTest do
       conn =
         conn
         |> put_req_cookie(@remember_me_cookie, signed_token)
-        |> CredentialsAuth.fetch_current_credentials([])
+        |> CredentialsAuth.fetch_current_member_and_credentials([])
 
       assert get_session(conn, :credentials_token) == credentials_token
       assert conn.assigns.current_credentials.id == credentials.id
@@ -107,7 +132,7 @@ defmodule EmployeeRewardsWeb.CredentialsAuthTest do
 
     test "does not authenticate if data is missing", %{conn: conn, credentials: credentials} do
       _ = Identity.generate_credentials_session_token(credentials)
-      conn = CredentialsAuth.fetch_current_credentials(conn, [])
+      conn = CredentialsAuth.fetch_current_member_and_credentials(conn, [])
       refute get_session(conn, :credentials_token)
       refute conn.assigns.current_credentials
     end
@@ -115,7 +140,11 @@ defmodule EmployeeRewardsWeb.CredentialsAuthTest do
 
   describe "redirect_if_credentials_is_authenticated/2" do
     test "redirects if credentials is authenticated", %{conn: conn, credentials: credentials} do
-      conn = conn |> assign(:current_credentials, credentials) |> CredentialsAuth.redirect_if_credentials_is_authenticated([])
+      conn =
+        conn
+        |> assign(:current_credentials, credentials)
+        |> CredentialsAuth.redirect_if_credentials_is_authenticated([])
+
       assert conn.halted
       assert redirected_to(conn) == "/"
     end
@@ -161,8 +190,15 @@ defmodule EmployeeRewardsWeb.CredentialsAuthTest do
       refute get_session(halted_conn, :credentials_return_to)
     end
 
-    test "does not redirect if credentials is authenticated", %{conn: conn, credentials: credentials} do
-      conn = conn |> assign(:current_credentials, credentials) |> CredentialsAuth.require_authenticated_credentials([])
+    test "does not redirect if credentials is authenticated", %{
+      conn: conn,
+      credentials: credentials
+    } do
+      conn =
+        conn
+        |> assign(:current_credentials, credentials)
+        |> CredentialsAuth.require_authenticated_credentials([])
+
       refute conn.halted
       refute conn.status
     end

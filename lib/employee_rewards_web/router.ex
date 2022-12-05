@@ -10,7 +10,7 @@ defmodule EmployeeRewardsWeb.Router do
     plug :put_root_layout, {EmployeeRewardsWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_credentials
+    plug :fetch_current_member_and_credentials
   end
 
   pipeline :api do
