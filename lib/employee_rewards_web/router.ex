@@ -21,8 +21,8 @@ defmodule EmployeeRewardsWeb.Router do
     pipe_through :browser
 
     get "/", MemberController, :index
-    get "/members/:id/grant", MemberController, :grant
-    put "/members/:id/grant", MemberController, :change
+    get "/members/:id/transfer", MemberController, :transfer
+    put "/members/:id/transfer", MemberController, :change
   end
 
   # Other scopes may use custom stacks.

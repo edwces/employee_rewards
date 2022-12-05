@@ -1,0 +1,11 @@
+<h1>Grant points</h1>
+
+<.form let={f} for={@conn} action={Routes.member_path(@conn, :change, @member)} id="transfer_points" method="PUT" errors={get_errors(@conn)}>
+  <%= label f, :points %>
+  <%= number_input f, :points, required: true %>
+  <%= error_tag f, :points %>
+  <div>
+    <%= submit "Grant Points" %>
+  </div>
+
+</.form>

@@ -15,7 +15,7 @@
       <td><%= member.first_name %></td>
       <td><%= member.last_name %></td>
       <td><%= member.points %></td>
-      <td><%= link to: Routes.member_path(@conn, :grant, member), class: "btn btn-light float-end" do %>
+      <td><%= link to: Routes.member_path(@conn, :transfer, member), class: "btn btn-light float-end" do %>
         <i class="bi bi-award"></i>
         <% end %>
       </td>
