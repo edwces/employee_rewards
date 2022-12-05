@@ -98,8 +98,10 @@ defmodule EmployeeRewardsWeb.CredentialsAuth do
       credentials_token && Identity.get_credentials_by_session_token(credentials_token)
 
     member = credentials && Members.get_member_by_credentials(credentials)
-    assign(conn, :current_credentials, credentials)
-    assign(conn, :current_member, member)
+
+    conn
+    |> assign(:current_credentials, credentials)
+    |> assign(:current_member, member)
   end
 
   defp ensure_credentials_token(conn) do

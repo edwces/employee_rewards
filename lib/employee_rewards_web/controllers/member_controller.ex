@@ -17,7 +17,7 @@ defmodule EmployeeRewardsWeb.MemberController do
   # Either way add remove this page and grant and this functionality into index
   # Or add custom input helper in View Module
   def change(conn, %{"id" => member_id, "member" => member}) do
-    from = Members.get_member_by_credentials(conn.assigns.current_credentials)
+    from = conn.assigns.current_member
     to = Members.get_member!(member_id)
     # TODO: Handle this error if value isn't parsable or doesn't exist
     {points, _rem} = member |> Map.get("points") |> Integer.parse()
