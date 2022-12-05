@@ -1,11 +1,13 @@
-<h1>Grant points</h1>
+<section class="w-50 mx-auto">
+<h1 class="mb-5">Grant points</h1>
 
 <.form let={f} for={@conn} action={Routes.member_path(@conn, :change, @member)} id="transfer_points" method="PUT" errors={get_errors(@conn)}>
-  <%= label f, :points %>
-  <%= number_input f, :points, required: true %>
-  <%= error_tag f, :points %>
-  <div>
-    <%= submit "Grant Points" %>
+  <%= label f, :points, class: "form-label"%>
+  <%= number_input f, :points, required: true, class: "form-control" %>
+  <%= error_tag f, :points%>
+  <div class="mt-4">
+    <%= submit "Grant Points", class: "btn btn-primary" %>
   </div>
 
 </.form>
+</section>
