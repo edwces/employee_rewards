@@ -83,24 +83,6 @@ defmodule EmployeeRewards.Members do
   end
 
   @doc """
-  Updates a member.
-  
-  ## Examples
-  
-      iex> update_member(member, %{field: new_value})
-      {:ok, %Member{}}
-  
-      iex> update_member(member, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-  
-  """
-  def update_member(%Member{} = member, attrs) do
-    member
-    |> Member.register_changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a member.
   
   ## Examples

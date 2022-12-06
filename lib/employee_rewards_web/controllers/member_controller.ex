@@ -16,9 +16,12 @@ defmodule EmployeeRewardsWeb.MemberController do
   # HACK: We should probably not use custom form helpers this way
   # Either way add remove this page and grant and this functionality into index
   # Or add custom input helper in View Module
+  # TODO: Handle making transfer making to transfer to myself an error and
+  # not finding "to" member
   def change(conn, %{"id" => member_id, "points" => points}) do
     from = conn.assigns.current_member
     to = Members.get_member!(member_id)
+
     # REFACTOR: Nested case statement
     case Integer.parse(points) do
       {points, _rem} when is_positive(points) ->

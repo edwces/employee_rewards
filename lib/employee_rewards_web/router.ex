@@ -2,7 +2,6 @@ defmodule EmployeeRewardsWeb.Router do
   use EmployeeRewardsWeb, :router
 
   import EmployeeRewardsWeb.CredentialsAuth
-  import EmployeeRewardsWeb.RoleAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
