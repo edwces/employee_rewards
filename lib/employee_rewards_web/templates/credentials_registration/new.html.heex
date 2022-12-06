@@ -36,7 +36,7 @@
 
   <div class="d-flex justify-content-between">
     <%= submit "Register", class: "btn btn-primary" %>
-    <p class="align-middle my-auto">
+    <p class="my-auto">
   <%= link "Log in", to: Routes.credentials_session_path(@conn, :new) %> |
   <%= link "Forgot your password?", to: Routes.credentials_reset_password_path(@conn, :new) %>
 </p>

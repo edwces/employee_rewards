@@ -1,4 +1,5 @@
-<h1>Log in</h1>
+<section class="w-50 mx-auto">
+<h1 class="mb-5">Log in</h1>
 
 <.form let={f} for={@conn} action={Routes.credentials_session_path(@conn, :create)} as={:credentials}>
   <%= if @error_message do %>
@@ -7,21 +8,27 @@
     </div>
   <% end %>
 
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
-
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
-
-  <%= label f, :remember_me, "Keep me logged in for 60 days" %>
-  <%= checkbox f, :remember_me %>
-
-  <div>
-    <%= submit "Log in" %>
+  <div class="mb-3">
+  <%= label f, :email, class: "form-label" %>
+  <%= email_input f, :email, required: true, class: "form-control" %>
   </div>
-</.form>
+  <div class="mb-3">
+  <%= label f, :password , class: "form-label"%>
+  <%= password_input f, :password, required: true , class: "form-control"%>
 
-<p>
+  </div>
+  <div class="mb-3">
+  <%= label f, :remember_me, "Keep me logged in for 60 days" , class: "form-check-label"%>
+  <%= checkbox f, :remember_me, class: "form-check-input" %>
+
+  </div>
+  <div class="d-flex justify-content-between">
+    <%= submit "Log in", class: "btn btn-primary" %><p class="my-auto">
   <%= link "Register", to: Routes.credentials_registration_path(@conn, :new) %> |
   <%= link "Forgot your password?", to: Routes.credentials_reset_password_path(@conn, :new) %>
 </p>
+
+  </div>
+</.form>
+
+</section>
