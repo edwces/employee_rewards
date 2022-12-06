@@ -91,7 +91,9 @@ defmodule EmployeeRewardsWeb.CredentialsAuth do
   and remember me token.
   """
   # REVIEW: Should probably be in it's own standalone module
-  # and abstract and put credentials as association
+  # and abstract and put credentials as association.
+  # Maybe store extra profile info in just one assign and add
+  # is_admin as boolean value for better templating logic
   def fetch_current_auth(conn, _opts) do
     {credentials_token, conn} = ensure_credentials_token(conn)
 
