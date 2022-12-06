@@ -3,6 +3,7 @@ defmodule EmployeeRewardsWeb.CredentialsAuth do
   import Phoenix.Controller
 
   alias EmployeeRewards.Members
+  alias EmployeeRewards.Admins
   alias EmployeeRewards.Identity
   alias EmployeeRewardsWeb.Router.Helpers, as: Routes
 
@@ -91,17 +92,19 @@ defmodule EmployeeRewardsWeb.CredentialsAuth do
   """
   # REVIEW: Should probably be in it's own standalone module
   # and abstract and put credentials as association
-  def fetch_current_member_and_credentials(conn, _opts) do
+  def fetch_current_auth(conn, _opts) do
     {credentials_token, conn} = ensure_credentials_token(conn)
 
     credentials =
       credentials_token && Identity.get_credentials_by_session_token(credentials_token)
 
     member = credentials && Members.get_member_by_credentials(credentials)
+    admin = credentials && Admins.get_admin_by_credentials(credentials)
 
     conn
     |> assign(:current_credentials, credentials)
     |> assign(:current_member, member)
+    |> assign(:current_admin, admin)
   end
 
   defp ensure_credentials_token(conn) do

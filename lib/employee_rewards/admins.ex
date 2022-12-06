@@ -7,6 +7,11 @@ defmodule EmployeeRewards.Admins do
   alias EmployeeRewards.Repo
 
   alias EmployeeRewards.Admins.Admin
+  alias EmployeeRewards.Identity
+
+  def get_admin_by_credentials(%Identity.Credentials{} = credentials) do
+    Repo.get_by(Admin, credentials_id: credentials.id)
+  end
 
   @doc """
   Returns the list of admins.

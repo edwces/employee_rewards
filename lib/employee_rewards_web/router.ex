@@ -2,6 +2,7 @@ defmodule EmployeeRewardsWeb.Router do
   use EmployeeRewardsWeb, :router
 
   import EmployeeRewardsWeb.CredentialsAuth
+  import EmployeeRewardsWeb.RoleAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -10,19 +11,11 @@ defmodule EmployeeRewardsWeb.Router do
     plug :put_root_layout, {EmployeeRewardsWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug :fetch_current_member_and_credentials
+    plug :fetch_current_auth
   end
 
   pipeline :api do
     plug :accepts, ["json"]
-  end
-
-  scope "/", EmployeeRewardsWeb do
-    pipe_through :browser
-
-    get "/", MemberController, :index
-    get "/members/:id/transfer", MemberController, :transfer
-    put "/members/:id/transfer", MemberController, :change
   end
 
   # Other scopes may use custom stacks.
@@ -77,6 +70,9 @@ defmodule EmployeeRewardsWeb.Router do
   scope "/", EmployeeRewardsWeb do
     pipe_through [:browser, :require_authenticated_credentials]
 
+    get "/", MemberController, :index
+    get "/members/:id/transfer", MemberController, :transfer
+    put "/members/:id/transfer", MemberController, :change
     get "/credentials/settings", CredentialsSettingsController, :edit
     put "/credentials/settings", CredentialsSettingsController, :update
 

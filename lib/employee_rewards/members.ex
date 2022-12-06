@@ -11,7 +11,7 @@ defmodule EmployeeRewards.Members do
 
   # REVIEW: Maybe it's better to use just map as a param instead whole credentials struct
   def get_member_by_credentials(%Identity.Credentials{} = credentials) do
-    Repo.get_by!(Member, credentials_id: credentials.id)
+    Repo.get_by(Member, credentials_id: credentials.id)
   end
 
   def transfer_member_points(%Member{} = from, %Member{} = to, %{points: points}) do
