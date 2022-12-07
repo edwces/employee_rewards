@@ -13,6 +13,12 @@ defmodule EmployeeRewardsWeb.MemberController do
   end
 
   defguard is_positive(num) when is_integer(num) and num > 0
+
+  defp put_errors(conn, errors) do
+    errors = Enum.map(errors, fn {key, msg} -> {key, {msg, []}} end)
+    Plug.Conn.assign(conn, :errors, errors)
+  end
+
   # HACK: We should probably not use custom form helpers this way
   # Either way add remove this page and grant and this functionality into index
   # Or add custom input helper in View Module
@@ -22,39 +28,32 @@ defmodule EmployeeRewardsWeb.MemberController do
     from = conn.assigns.current_member
     to = Members.get_member!(member_id)
 
-    # REFACTOR: Nested case statement
-    case Integer.parse(points) do
-      {points, _rem} when is_positive(points) ->
-        case Members.transfer_member_points(from, to, %{points: points}) do
-          {:ok, _changed} ->
-            conn
-            |> put_flash(:info, "Succesfully granted points")
-            |> redirect(to: Routes.member_path(conn, :index))
+    with false <- from.id == to.id,
+         {parsed, _rem} when is_positive(parsed) <- Integer.parse(points),
+         {:ok, _changed} <- Members.transfer_member_points(from, to, %{points: parsed}) do
+      conn
+      |> put_flash(:info, "Succesfully granted points")
+      |> redirect(to: Routes.member_path(conn, :index))
+    else
+      {:error, :member_from, _changeset, _changes} ->
+        conn
+        |> put_errors(points: "Not enough points to transfer")
+        |> render("transfer.html", member: to)
 
-          {:error, :member_from, _changeset, _changes} ->
-            render(conn, "transfer.html",
-              member: to,
-              errors: [points: {"Not enough points to transfer", []}]
-            )
+      {parsed, _rem} when is_integer(parsed) ->
+        conn
+        |> put_errors(points: "Points must be a positive number")
+        |> render("transfer.html", member: to)
 
-          {:error, :member_to, _changeset, _changes} ->
-            render(conn, "transfer.html",
-              member: to,
-              errors: [points: {"Something went wrong", []}]
-            )
-        end
-
-      {_points, _rem} ->
-        render(conn, "transfer.html",
-          member: to,
-          errors: [points: {"Points must be a positive value", []}]
-        )
+      :error ->
+        conn
+        |> put_errors(points: "Must specify correct format for points")
+        |> render("transfer.html", member: to)
 
       _ ->
-        render(conn, "transfer.html",
-          member: to,
-          errors: [points: {"Points are not passed with correct format", []}]
-        )
+        conn
+        |> put_flash(:error, "Something went wrong")
+        |> render("transfer.html", member: to)
     end
   end
 end
