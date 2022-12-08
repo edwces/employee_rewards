@@ -5,7 +5,7 @@ defmodule EmployeeRewards.Members.Member do
   schema "members" do
     field :first_name, :string
     field :last_name, :string
-    field :pool, :integer, default: 0
+    field :pool, :integer, default: 50
     field :points, :integer, default: 0
     belongs_to :credentials, EmployeeRewards.Identity.Credentials
     has_many :rewards, EmployeeRewards.Rewards.Reward
@@ -27,5 +27,11 @@ defmodule EmployeeRewards.Members.Member do
     member
     |> cast(attrs, [:points])
     |> validate_number(:points, greater_than_or_equal_to: 0)
+  end
+
+  def pool_changeset(member, attrs) do
+    member
+    |> cast(attrs, [:pool])
+    |> validate_number(:pool, greater_than_or_equal_to: 0)
   end
 end

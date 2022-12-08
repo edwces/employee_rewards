@@ -18,7 +18,7 @@ defmodule EmployeeRewards.Members do
     Ecto.Multi.new()
     |> Ecto.Multi.update(
       :member_from,
-      change_member_points(from, %{points: from.points - points})
+      change_member_pool(from, %{pool: from.pool - points})
     )
     |> Ecto.Multi.update(
       :member_to,
@@ -29,6 +29,10 @@ defmodule EmployeeRewards.Members do
 
   def change_member_points(%Member{} = member, attrs \\ %{}) do
     Member.points_changeset(member, attrs)
+  end
+
+  def change_member_pool(%Member{} = member, attrs \\ %{}) do
+    Member.pool_changeset(member, attrs)
   end
 
   def reset_members_points do
