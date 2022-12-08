@@ -32,7 +32,7 @@ defmodule EmployeeRewards.Members do
   end
 
   def reset_members_points do
-    Repo.update_all(Member, set: [points: 50])
+    Repo.update_all(Member, set: [pool: 50])
   end
 
   @doc """
