@@ -5,8 +5,10 @@ defmodule EmployeeRewards.Members.Member do
   schema "members" do
     field :first_name, :string
     field :last_name, :string
+    field :pool, :integer, default: 0
     field :points, :integer, default: 0
     belongs_to :credentials, EmployeeRewards.Identity.Credentials
+    has_many :rewards, EmployeeRewards.Rewards.Reward
 
     timestamps()
   end
