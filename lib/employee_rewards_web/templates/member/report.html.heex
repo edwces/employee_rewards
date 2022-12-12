@@ -1,0 +1,30 @@
+<div class="accordion" id="accordion-report">
+    <%= for member <- @members do %>
+        <div class="accordion-item">
+        <h2 class="accordion-header" id={"heading-#{member.id}"}>
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={"#collapse-#{member.id}"} aria-expanded="true" aria-controls={"collapse-#{member.id}"}>
+                <span><%= member.first_name %> <%= member.last_name %></span>
+            </button>
+        </h2>
+        <div id={"collapse-#{member.id}"} class="accordion-collapse collapse show" aria-labelledby={"heading-#{member.id}"} data-bs-parent="#accordion-report">
+            <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Points rewarded</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for reward <- member.rewards do %>
+    <tr>
+      <td><%= reward.inserted_at %></td>
+      <td><%= reward.amount %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+        </div>
+        </div>
+    <% end %>
+</div>

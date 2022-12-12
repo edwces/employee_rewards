@@ -2,6 +2,7 @@ defmodule EmployeeRewardsWeb.Router do
   use EmployeeRewardsWeb, :router
 
   import EmployeeRewardsWeb.CredentialsAuth
+  import EmployeeRewardsWeb.RoleAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -79,6 +80,12 @@ defmodule EmployeeRewardsWeb.Router do
     get "/credentials/settings/confirm_email/:token",
         CredentialsSettingsController,
         :confirm_email
+  end
+
+  scope "/", EmployeeRewardsWeb do
+    pipe_through [:browser, :require_admin_role]
+
+    get "/members/report", MemberController, :report
   end
 
   scope "/", EmployeeRewardsWeb do

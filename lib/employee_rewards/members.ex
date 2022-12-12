@@ -16,6 +16,10 @@ defmodule EmployeeRewards.Members do
     Repo.get_by(Member, credentials_id: credentials.id)
   end
 
+  def list_members_with_rewards do
+    Repo.preload(Repo.all(Member), :rewards)
+  end
+
   def get_member_rewards_by_id(id) do
     Repo.all(
       from(entity in Rewards.Reward,
