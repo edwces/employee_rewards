@@ -72,6 +72,7 @@ defmodule EmployeeRewardsWeb.Router do
     get "/", MemberController, :index
     get "/members/:id/transfer", MemberController, :transfer
     put "/members/:id/transfer", MemberController, :change
+    get "/members/history", MemberController, :history
     get "/credentials/settings", CredentialsSettingsController, :edit
     put "/credentials/settings", CredentialsSettingsController, :update
 

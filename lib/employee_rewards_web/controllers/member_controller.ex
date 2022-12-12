@@ -7,6 +7,11 @@ defmodule EmployeeRewardsWeb.MemberController do
     render(conn, "index.html", members: members)
   end
 
+  def history(conn, _params) do
+    rewards = Members.get_member_rewards_by_id(conn.assigns.current_member.id)
+    render(conn, "history.html", rewards: rewards)
+  end
+
   def transfer(conn, %{"id" => member_id}) do
     member = Members.get_member!(member_id)
     render(conn, "transfer.html", member: member)

@@ -1,0 +1,16 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Points rewarded</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for reward <- @rewards do %>
+    <tr>
+      <td><%= reward.inserted_at %></td>
+      <td><%= reward.amount %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
