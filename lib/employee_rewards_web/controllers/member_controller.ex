@@ -35,7 +35,10 @@ defmodule EmployeeRewardsWeb.MemberController do
 
     with false <- from.id == to.id,
          {parsed, _rem} when is_positive(parsed) <- Integer.parse(points),
-         {:ok, _changed} <- Members.transfer_member_points(from, to, %{points: parsed}) do
+         {:ok, _changed} <-
+           Members.transfer_member_points(from, to, %{points: parsed}) do
+      Members.deliver_member_reward_email(to, parsed)
+
       conn
       |> put_flash(:info, "Succesfully granted points")
       |> redirect(to: Routes.member_path(conn, :index))

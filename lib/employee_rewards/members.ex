@@ -9,6 +9,7 @@ defmodule EmployeeRewards.Members do
 
   alias EmployeeRewards.Members.Member
   alias EmployeeRewards.Identity
+  alias EmployeeRewards.Members.MemberEmail
 
   # REVIEW: Maybe it's better to use just map as a param instead whole credentials struct
   def get_member_by_credentials(%Identity.Credentials{} = credentials) do
@@ -41,6 +42,13 @@ defmodule EmployeeRewards.Members do
       end
     )
     |> Repo.transaction()
+  end
+
+  def deliver_member_reward_email(member, amount) do
+    member
+    |> Repo.preload([:credentials])
+    |> MemberEmail.reward(amount)
+    |> EmployeeRewards.Mailer.deliver()
   end
 
   def change_member_points(%Member{} = member, attrs \\ %{}) do
