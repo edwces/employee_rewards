@@ -4,6 +4,7 @@ defmodule EmployeeRewards.Members do
   """
 
   import Ecto.Query, warn: false
+  alias EmployeeRewards.Rewards
   alias EmployeeRewards.Repo
 
   alias EmployeeRewards.Members.Member
@@ -12,6 +13,15 @@ defmodule EmployeeRewards.Members do
   # REVIEW: Maybe it's better to use just map as a param instead whole credentials struct
   def get_member_by_credentials(%Identity.Credentials{} = credentials) do
     Repo.get_by(Member, credentials_id: credentials.id)
+  end
+
+  def get_member_rewards_by_id(id) do
+    Repo.all(
+      from(entity in Rewards.Reward,
+        where: entity.member_id == ^id,
+        order_by: [entity.inserted_at]
+      )
+    )
   end
 
   def transfer_member_points(%Member{} = from, %Member{} = to, %{points: points}) do
@@ -23,6 +33,12 @@ defmodule EmployeeRewards.Members do
     |> Ecto.Multi.update(
       :member_to,
       change_member_points(to, %{points: to.points + points})
+    )
+    |> Ecto.Multi.run(
+      :create_reward_entry,
+      fn _repo, %{member_to: member} ->
+        Rewards.create_reward(%{amount: points, member: member})
+      end
     )
     |> Repo.transaction()
   end

@@ -9,8 +9,6 @@ defmodule EmployeeRewards.Repo.Migrations.CreateRewards do
       timestamps()
     end
 
-    create unique_index(:rewards, [:member_id])
-
     alter table(:members) do
       add :pool, :integer
     end
