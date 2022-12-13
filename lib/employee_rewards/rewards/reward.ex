@@ -4,7 +4,7 @@ defmodule EmployeeRewards.Rewards.Reward do
 
   schema "rewards" do
     field :amount, :integer
-    belongs_to :member, EmployeeRewards.Members.Member
+    belongs_to :member, EmployeeRewards.Members.Member, on_replace: :nilify
 
     timestamps()
   end
@@ -13,7 +13,7 @@ defmodule EmployeeRewards.Rewards.Reward do
   def changeset(reward, attrs) do
     reward
     |> cast(attrs, [:amount])
-    |> put_assoc(:member, attrs.member, required: true, on_replace: :update)
+    |> put_assoc(:member, attrs.member, required: true)
     |> validate_required([:amount])
     |> validate_number(:amount, greater_than: 0)
   end
