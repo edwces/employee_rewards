@@ -14,4 +14,15 @@ defmodule EmployeeRewardsWeb.RoleAuth do
       |> halt()
     end
   end
+
+  def require_member_role(conn, _opts) do
+    if conn.assigns[:current_member] do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You need to be an member to see this page")
+      |> redirect(to: Routes.member_path(conn, :report))
+      |> halt()
+    end
+  end
 end

@@ -70,23 +70,27 @@ defmodule EmployeeRewardsWeb.Router do
   scope "/", EmployeeRewardsWeb do
     pipe_through [:browser, :require_authenticated_credentials]
 
-    get "/", MemberController, :index
-    get "/members/:id/transfer", MemberController, :transfer
-    put "/members/:id/transfer", MemberController, :change
-    get "/members/history", MemberController, :history
-    get "/credentials/settings", CredentialsSettingsController, :edit
-    put "/credentials/settings", CredentialsSettingsController, :update
+    scope "/admin" do
+      pipe_through [:require_admin_role]
 
-    get "/credentials/settings/confirm_email/:token",
-        CredentialsSettingsController,
-        :confirm_email
-  end
+      resources "/", RewardController
+      get "/members/report", MemberController, :report
+    end
 
-  scope "/", EmployeeRewardsWeb do
-    pipe_through [:browser, :require_admin_role]
+    scope "/" do
+      pipe_through [:require_member_role]
 
-    get "/members/report", MemberController, :report
-    resources "/rewards", RewardController
+      get "/", MemberController, :index
+      get "/members/:id/transfer", MemberController, :transfer
+      put "/members/:id/transfer", MemberController, :change
+      get "/members/history", MemberController, :history
+      get "/credentials/settings", CredentialsSettingsController, :edit
+      put "/credentials/settings", CredentialsSettingsController, :update
+
+      get "/credentials/settings/confirm_email/:token",
+          CredentialsSettingsController,
+          :confirm_email
+    end
   end
 
   scope "/", EmployeeRewardsWeb do
