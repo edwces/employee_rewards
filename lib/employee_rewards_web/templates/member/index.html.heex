@@ -10,6 +10,7 @@
   </thead>
   <tbody>
     <%= for member <- @members do %>
+    <%= if member.id != @current_member.id do %>
     <tr>
       <td><%= member.id %></td>
       <td><%= member.first_name %></td>
@@ -20,6 +21,7 @@
         <% end %>
       </td>
     </tr>
+    <% end %>
     <% end %>
   </tbody>
 </table>

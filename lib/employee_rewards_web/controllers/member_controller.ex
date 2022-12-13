@@ -2,6 +2,7 @@ defmodule EmployeeRewardsWeb.MemberController do
   alias EmployeeRewards.Members
   use EmployeeRewardsWeb, :controller
 
+  # REVIEW: Should rename this because it actually doesn't show all members
   def index(conn, _params) do
     members = Members.list_members()
     render(conn, "index.html", members: members)
