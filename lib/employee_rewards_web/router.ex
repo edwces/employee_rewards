@@ -86,6 +86,7 @@ defmodule EmployeeRewardsWeb.Router do
     pipe_through [:browser, :require_admin_role]
 
     get "/members/report", MemberController, :report
+    resources "/rewards", RewardController
   end
 
   scope "/", EmployeeRewardsWeb do
