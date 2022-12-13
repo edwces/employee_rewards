@@ -47,10 +47,10 @@ defmodule EmployeeRewards.Admins do
 
   ## Examples
 
-      iex> create_admin(%{field: value})
+      iex> register_admin(%{field: value})
       {:ok, %Admin{}}
 
-      iex> create_admin(%{field: bad_value})
+      iex> register_admin(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """

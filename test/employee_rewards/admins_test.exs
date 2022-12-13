@@ -8,39 +8,44 @@ defmodule EmployeeRewards.AdminsTest do
 
     import EmployeeRewards.AdminsFixtures
 
-    @invalid_attrs %{}
+    @invalid_attrs %{first_name: nil}
 
     test "list_admins/0 returns all admins" do
       admin = admin_fixture()
-      assert Admins.list_admins() == [admin]
+      assert Enum.map(Admins.list_admins(), fn admin -> admin.id end) == [admin.id]
     end
 
     test "get_admin!/1 returns the admin with given id" do
       admin = admin_fixture()
-      assert Admins.get_admin!(admin.id) == admin
+      assert Admins.get_admin!(admin.id).id == admin.id
     end
 
-    test "create_admin/1 with valid data creates a admin" do
-      valid_attrs = %{}
-
-      assert {:ok, %Admin{} = admin} = Admins.create_admin(valid_attrs)
+    test "get_admin_by_credentials/1 with valid data returns a admin with given credentials" do
+      admin = admin_fixture()
+      assert Admins.get_admin_by_credentials(admin.credentials).id == admin.id
     end
 
-    test "create_admin/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Admins.create_admin(@invalid_attrs)
+    test "register_admin/1 with valid data creates a admin" do
+      valid_attrs = valid_admin_attributes()
+
+      assert {:ok, %Admin{}} = Admins.register_admin(valid_attrs)
+    end
+
+    test "register_admin/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Admins.register_admin(@invalid_attrs)
     end
 
     test "update_admin/2 with valid data updates the admin" do
       admin = admin_fixture()
       update_attrs = %{}
 
-      assert {:ok, %Admin{} = admin} = Admins.update_admin(admin, update_attrs)
+      assert {:ok, %Admin{}} = Admins.update_admin(admin, update_attrs)
     end
 
     test "update_admin/2 with invalid data returns error changeset" do
       admin = admin_fixture()
       assert {:error, %Ecto.Changeset{}} = Admins.update_admin(admin, @invalid_attrs)
-      assert admin == Admins.get_admin!(admin.id)
+      assert admin.id == Admins.get_admin!(admin.id).id
     end
 
     test "delete_admin/1 deletes the admin" do
