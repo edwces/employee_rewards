@@ -4,6 +4,7 @@
   <thead>
     <tr>
       <th>Amount</th>
+      <th>Member Id</th>
 
       <th></th>
     </tr>
@@ -12,7 +13,7 @@
 <%= for reward <- @rewards do %>
     <tr>
       <td><%= reward.amount %></td>
-
+      <td><%= reward.member_id %></td>
       <td>
         <span><%= link "Show", to: Routes.reward_path(@conn, :show, reward) %></span>
         <span><%= link "Edit", to: Routes.reward_path(@conn, :edit, reward) %></span>

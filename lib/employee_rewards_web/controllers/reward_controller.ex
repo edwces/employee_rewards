@@ -1,6 +1,7 @@
 defmodule EmployeeRewardsWeb.RewardController do
   use EmployeeRewardsWeb, :controller
 
+  alias EmployeeRewards.Members
   alias EmployeeRewards.Rewards
   alias EmployeeRewards.Rewards.Reward
 
@@ -10,12 +11,14 @@ defmodule EmployeeRewardsWeb.RewardController do
   end
 
   def new(conn, _params) do
-    changeset = Rewards.change_reward(%Reward{})
+    changeset = Rewards.change_reward(%Reward{}, %{member: nil})
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"reward" => reward_params}) do
-    case Rewards.create_reward(reward_params) do
+    member = Members.get_member!(reward_params["member_id"])
+
+    case Rewards.create_reward(%{member: member, amount: reward_params["amount"]}) do
       {:ok, reward} ->
         conn
         |> put_flash(:info, "Reward created successfully.")
@@ -39,8 +42,9 @@ defmodule EmployeeRewardsWeb.RewardController do
 
   def update(conn, %{"id" => id, "reward" => reward_params}) do
     reward = Rewards.get_reward!(id)
+    member = Members.get_member!(reward_params["member_id"])
 
-    case Rewards.update_reward(reward, reward_params) do
+    case Rewards.update_reward(reward, %{member: member, amount: reward_params["amount"]}) do
       {:ok, reward} ->
         conn
         |> put_flash(:info, "Reward updated successfully.")

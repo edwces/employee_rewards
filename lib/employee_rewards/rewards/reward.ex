@@ -13,7 +13,8 @@ defmodule EmployeeRewards.Rewards.Reward do
   def changeset(reward, attrs) do
     reward
     |> cast(attrs, [:amount])
-    |> put_assoc(:member, attrs.member, required: true)
+    |> put_assoc(:member, attrs.member)
+    |> assoc_constraint(:member)
     |> validate_required([:amount])
     |> validate_number(:amount, greater_than: 0)
   end
