@@ -66,7 +66,7 @@ defmodule EmployeeRewards.MembersTest do
     end
 
     test "reset_members_points/0 updates all members" do
-      member = member_fixture()
+      member_fixture()
       assert {1, nil} = Members.reset_members_points()
     end
 
@@ -98,12 +98,11 @@ defmodule EmployeeRewards.MembersTest do
     end
 
     test "list_members_with_rewards/0 returns all members with their associated reward entries" do
-      member = member_fixture()
-      reward = RewardsFixtures.reward_fixture(%{member: member})
+      reward = RewardsFixtures.reward_fixture()
       result = Members.list_members_with_rewards()
 
       assert Enum.map(result, fn member -> member.id end) == [
-               member.id
+               reward.member.id
              ]
 
       assert Enum.map(result, fn member ->
@@ -117,7 +116,7 @@ defmodule EmployeeRewards.MembersTest do
       member = member_fixture()
       reward = RewardsFixtures.reward_fixture(%{member: member})
       result = Members.get_member_rewards_by_id(member.id)
-      Enum.map(result, fn reward -> reward.id end) == [reward.id]
+      assert Enum.map(result, fn reward -> reward.id end) == [reward.id]
     end
   end
 end
