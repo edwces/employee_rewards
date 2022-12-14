@@ -17,7 +17,7 @@
   <tbody>
     <%= for reward <- member.rewards do %>
     <tr>
-      <td><%= reward.inserted_at %></td>
+      <td><%= "#{reward.inserted_at.year}-#{reward.inserted_at.month}-#{reward.inserted_at.day}" %></td>
       <td><%= reward.amount %></td>
     </tr>
     <% end %>
