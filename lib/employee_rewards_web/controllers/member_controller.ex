@@ -14,7 +14,7 @@ defmodule EmployeeRewardsWeb.MemberController do
   end
 
   def report(conn, _params) do
-    members = Members.list_members_with_rewards()
+    members = Members.list_members_with_monthly_rewards()
     render(conn, "report.html", members: members)
   end
 

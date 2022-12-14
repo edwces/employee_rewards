@@ -16,15 +16,21 @@ defmodule EmployeeRewards.Members do
     Repo.get_by(Member, credentials_id: credentials.id)
   end
 
-  def list_members_with_rewards do
-    Repo.preload(Repo.all(Member), :rewards)
+  def list_members_with_monthly_rewards do
+    Repo.preload(Repo.all(Member),
+      rewards:
+        from(r in Rewards.Reward,
+          order_by: r.inserted_at,
+          where: fragment("date_trunc('month', ?) = date_trunc('month', NOW())", r.inserted_at)
+        )
+    )
   end
 
   def get_member_rewards_by_id(id) do
     Repo.all(
       from(entity in Rewards.Reward,
         where: entity.member_id == ^id,
-        order_by: [entity.inserted_at]
+        order_by: entity.inserted_at
       )
     )
   end

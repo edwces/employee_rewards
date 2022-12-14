@@ -97,9 +97,9 @@ defmodule EmployeeRewards.MembersTest do
       assert %Rewards.Reward{} = reward
     end
 
-    test "list_members_with_rewards/0 returns all members with their associated reward entries" do
+    test "list_members_with_monthly_rewards/0 returns all members with their associated reward entries" do
       reward = RewardsFixtures.reward_fixture()
-      result = Members.list_members_with_rewards()
+      result = Members.list_members_with_monthly_rewards()
 
       assert Enum.map(result, fn member -> member.id end) == [
                reward.member.id
