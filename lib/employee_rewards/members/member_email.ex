@@ -3,8 +3,9 @@ defmodule EmployeeRewards.Members.MemberEmail do
 
   def reward(member, amount) do
     new()
-    |> to({member.first_name, member.credentials.email})
-    |> from({"Employee Rewards App", "rewards@gmail.com"})
+    |> to(member.credentials.email)
+    |> subject("New Points")
+    |> from(System.get_env("SENDER_EMAIL"))
     |> html_body(
       "<h1>Hello #{member.first_name}</h1><p>You have been granted <bold>#{amount}</bold> points!</p>"
     )

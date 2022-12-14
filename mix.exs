@@ -50,7 +50,8 @@ defmodule EmployeeRewards.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:quantum, "~> 3.0"}
+      {:quantum, "~> 3.0"},
+      {:hackney, "~> 1.18"}
     ]
   end
 
